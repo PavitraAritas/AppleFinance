@@ -40,3 +40,6 @@ This project is a financial data filtering application that fetches and displays
 - TypeScript
 - Vite
 - TailwindCSS
+
+## Link to the App
+https://apple-finance.vercel.app/
