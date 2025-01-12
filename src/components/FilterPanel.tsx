@@ -9,10 +9,21 @@ interface FilterPanelProps {
 export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let newValue = value === '' ? 0 : Number(value);
+    
+    // Convert revenue and net income values from billions to actual values
+    if (['minRevenue', 'maxRevenue', 'minNetIncome', 'maxNetIncome'].includes(name)) {
+      newValue = newValue * 1000000000; // Convert billions to actual value
+    }
+    
     onFilterChange({
       ...filters,
-      [name]: value === '' ? 0 : Number(value),
+      [name]: newValue,
     });
+  };
+
+  const displayBillions = (value: number) => {
+    return value ? (value / 1000000000).toString() : '';
   };
 
   return (
@@ -49,17 +60,18 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-700">Revenue Range</h3>
+          <h3 className="text-sm font-medium text-gray-700">Revenue Range (in Billions USD)</h3>
           <div className="flex gap-4">
             <div>
               <label className="block text-sm text-gray-600">Min Revenue</label>
               <input
                 type="number"
                 name="minRevenue"
-                value={filters.minRevenue || ''}
+                value={displayBillions(filters.minRevenue)}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="Min Revenue"
+                step="0.1"
               />
             </div>
             <div>
@@ -67,27 +79,29 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
               <input
                 type="number"
                 name="maxRevenue"
-                value={filters.maxRevenue || ''}
+                value={displayBillions(filters.maxRevenue)}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="Max Revenue"
+                step="0.1"
               />
             </div>
           </div>
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-700">Net Income Range</h3>
+          <h3 className="text-sm font-medium text-gray-700">Net Income Range (in Billions USD)</h3>
           <div className="flex gap-4">
             <div>
               <label className="block text-sm text-gray-600">Min Net Income</label>
               <input
                 type="number"
                 name="minNetIncome"
-                value={filters.minNetIncome || ''}
+                value={displayBillions(filters.minNetIncome)}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="Min Net Income"
+                step="0.1"
               />
             </div>
             <div>
@@ -95,10 +109,11 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
               <input
                 type="number"
                 name="maxNetIncome"
-                value={filters.maxNetIncome || ''}
+                value={displayBillions(filters.maxNetIncome)}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="Max Net Income"
+                step="0.1"
               />
             </div>
           </div>
